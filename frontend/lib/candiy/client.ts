@@ -56,7 +56,9 @@ async function postCheckup<T>(body: unknown): Promise<T> {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "api-key": apiKey,
+        // 개발가이드는 `api-key`로 안내하지만 실제 게이트웨이는 `x-api-key`만 인정한다.
+        // `api-key`로 보내면 요청이 앱에 닿기 전에 403 Forbidden으로 차단된다.
+        "x-api-key": apiKey,
       },
       body: JSON.stringify(body),
       signal: controller.signal,
