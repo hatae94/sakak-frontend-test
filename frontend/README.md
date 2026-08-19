@@ -15,11 +15,7 @@ pnpm --filter frontend dev
 http://localhost:3000 에서 확인할 수 있습니다.
 `dev` 대신 `build` / `test` / `lint` 도 같은 방식으로 실행합니다.
 
-Docker로 실행하려면 저장소 루트에서:
-
-```bash
-CANDIY_API_KEY=발급받은_키 docker compose up --build
-```
+배포본은 [Vercel](https://sakak-frontend-test-frontend-gules.vercel.app/)에서 확인할 수 있습니다.
 
 ## 사용 기술
 
