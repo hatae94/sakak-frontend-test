@@ -214,10 +214,6 @@ export function CheckupFlow() {
           </button>
           {authMutation.isPending && <Spinner label="간편인증을 요청하고 있습니다" />}
         </div>
-
-        <p className="text-xs text-slate-500">
-          입력한 개인정보는 조회 요청에만 사용되며 서버에 저장되지 않습니다.
-        </p>
       </form>
     </Card>
   );

@@ -43,8 +43,7 @@ export default function LoginPage() {
           <div>
             <h1 className="text-lg font-semibold tracking-tight">로그인</h1>
             <p className="mt-1 text-sm text-slate-500">
-              건강검진 조회를 이용하려면 로그인이 필요합니다. 데모용이라 이름만 확인하며,
-              입력한 이름은 화면 안내 문구에만 사용되고 서버로 전송되지 않습니다.
+              건강검진 조회를 이용하려면 로그인이 필요합니다. 데모용이라 이름만 확인합니다.
             </p>
           </div>
 
