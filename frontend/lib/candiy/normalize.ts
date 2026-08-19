@@ -112,12 +112,29 @@ export interface EvaluatedMetric {
   reference?: string;
 }
 
+/**
+ * "정상A" 참고치 행을 찾는다.
+ *
+ * 문서는 refType을 `정상A`로 적어두었지만 실제 응답은 `정상(A)` 형태로 내려온다.
+ * 표기가 또 바뀌어도 깨지지 않도록 괄호·공백을 제거한 뒤 비교한다.
+ */
+export function findNormalReference(
+  references: CheckupReference[],
+): CheckupReference | undefined {
+  const squash = (s: string) => s.replace(/[()\s]/g, "");
+  return (
+    references.find((r) => squash(r.refType ?? "") === "정상A") ??
+    references.find((r) => squash(r.refType ?? "") === "정상B") ??
+    references.find((r) => squash(r.refType ?? "").startsWith("정상"))
+  );
+}
+
 /** 한 건의 검진 결과를 화면에서 바로 쓸 수 있는 항목 배열로 바꾼다. */
 export function evaluateOverview(
   overview: CheckupOverview,
   references: CheckupReference[] = [],
 ): EvaluatedMetric[] {
-  const normalRef = references.find((r) => r.refType?.includes("정상A"));
+  const normalRef = findNormalReference(references);
 
   const metrics: EvaluatedMetric[] = METRIC_DEFS.map((def) => {
     const raw = overview[def.key];

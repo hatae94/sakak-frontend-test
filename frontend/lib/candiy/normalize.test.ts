@@ -5,6 +5,7 @@ import {
   evaluateBloodPressure,
   evaluateMetric,
   evaluateOverview,
+  findNormalReference,
   normalizeCheckupData,
   parseBloodPressure,
   summarize,
@@ -157,6 +158,32 @@ describe("normalizeCheckupData", () => {
   });
 });
 
+describe("findNormalReference", () => {
+  // 문서는 refType을 "정상A"로 적어두었으나 실제 응답은 "정상(A)"로 내려온다.
+  it.each(["정상(A)", "정상A", "정상 (A)"])("%s 표기를 모두 인식한다", (refType) => {
+    expect(findNormalReference([{ refType }])?.refType).toBe(refType);
+  });
+
+  it("실제 응답의 refType 집합에서 정상(A) 행을 고른다", () => {
+    const list = [
+      { refType: "단위" },
+      { refType: "정상(A)", BMI: "18.5-24.9" },
+      { refType: "정상(B)" },
+      { refType: "질환의심" },
+    ];
+    expect(findNormalReference(list)?.BMI).toBe("18.5-24.9");
+  });
+
+  it("정상(A)가 없으면 정상(B)로 대체한다", () => {
+    const list = [{ refType: "단위" }, { refType: "정상(B)", BMI: "25-29.9" }];
+    expect(findNormalReference(list)?.BMI).toBe("25-29.9");
+  });
+
+  it("정상 계열이 없으면 undefined", () => {
+    expect(findNormalReference([{ refType: "단위" }, { refType: "질환의심" }])).toBeUndefined();
+  });
+});
+
 describe("evaluateOverview / summarize", () => {
   const overview = {
     checkupDate: "2024-03-01",
@@ -176,7 +203,7 @@ describe("evaluateOverview / summarize", () => {
 
   it("참고치가 있으면 항목에 붙여준다", () => {
     const metrics = evaluateOverview(overview, [
-      { refType: "정상A", BMI: "18.5-24.9" },
+      { refType: "정상(A)", BMI: "18.5-24.9" },
     ]);
     expect(metrics.find((m) => m.key === "BMI")?.reference).toBe("18.5-24.9");
   });

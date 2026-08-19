@@ -104,7 +104,9 @@ export interface CheckupOverview {
   checkupDate: string;
   height: string;
   weight: string;
-  waists: string;
+  /** 문서 표기는 `waists`지만 실제 응답은 단수형 `waist`로 내려온다. 둘 다 허용한다. */
+  waists?: string;
+  waist?: string;
   BMI: string;
   vision: string;
   hearing: string;
@@ -149,6 +151,8 @@ export interface CheckupResult {
   /** yyyy-mm-dd */
   checkupDate: string;
   organizationName: string;
+  /** 문서에 없으나 실제 응답에 포함된다. 검진 소견. */
+  checkupFindings?: string;
   /** inquiryType 이 1 또는 3일 때만 채워진다 */
   pdfData?: string;
   questionnaire?: unknown[];

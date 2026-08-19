@@ -107,7 +107,7 @@ export const DEMO_CHECKUP_DATA: CheckupData = {
       yGPT: "U/L",
     },
     {
-      refType: "정상A",
+      refType: "정상(A)",
       BMI: "18.5-24.9",
       waists: "남90미만 여85미만",
       bloodPressure: "120/80 미만",
