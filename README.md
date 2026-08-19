@@ -2,10 +2,25 @@
 
 두 과제를 하나의 pnpm 워크스페이스로 구성했습니다.
 
-| 디렉터리 | 과제 | 문서 |
-|---|---|---|
-| [`algorithm/`](./algorithm) | 1. 개미수열 (Look and Say Sequence) | [algorithm/README.md](./algorithm/README.md) |
-| [`frontend/`](./frontend) | 2. 개인 맞춤형 건강 분석 대시보드 | [frontend/README.md](./frontend/README.md) |
+### 배포된 대시보드 → **https://sakak-frontend-test-frontend-gules.vercel.app**
+
+이름을 입력해 로그인하면 조회 화면으로 들어갑니다. 검진 결과 조회는 국민건강보험공단 간편인증을 거치므로 본인 인증이 필요합니다.
+
+---
+
+## 과제 1. 개미수열 (Look and Say Sequence)
+
+n번째 항의 가운데 두 자리를 반환합니다. 문제의 예시 표를 테스트로 먼저 옮기고 구현하는 순서로 진행했습니다.
+
+**→ [algorithm/README.md](./algorithm/README.md)** — 풀이 방식, 복잡도 실측(n=40~62), 도달하지 못한 한계와 검토한 개선 방향
+
+## 과제 2. 개인 맞춤형 건강 분석 대시보드
+
+CANDiY API로 건강검진 결과를 조회해 시각화합니다. 2단계 간편인증, 13개 항목의 상태 판정, 수치 추이 그래프, 검진 이력 리스트를 포함합니다.
+
+**→ [frontend/README.md](./frontend/README.md)** — 실행 방법, 사용 기술, 설계 상 판단(API Key 은닉·로그인 게이트·판정 기준), 개발가이드와 실제 API 응답의 차이
+
+---
 
 ## 빠른 시작
 
@@ -14,7 +29,7 @@ pnpm install     # 저장소 루트에서 1회
 pnpm test        # 전체 테스트 (알고리즘 9 + 프론트엔드 59)
 ```
 
-각 과제의 실행 방법과 설계 설명은 위 표의 개별 README에 있습니다.
+프론트엔드를 로컬에서 실행하려면 API Key 설정이 필요합니다. [frontend/README.md](./frontend/README.md#실행-방법)를 참고하세요.
 
 ## 개발 환경
 
