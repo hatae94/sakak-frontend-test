@@ -1,0 +1,12 @@
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # .env 파일에 CANDIY_API_KEY 를 정의하거나 셸 환경변수로 전달하세요.
+      CANDIY_API_KEY: ${CANDIY_API_KEY:?CANDIY_API_KEY 환경변수가 필요합니다}
+      CANDIY_API_BASE_URL: ${CANDIY_API_BASE_URL:-https://api.candiy.io}
+    restart: unless-stopped
