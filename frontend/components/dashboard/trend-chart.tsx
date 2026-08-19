@@ -97,6 +97,9 @@ export function TrendChart({ overviews }: Props) {
               strokeWidth={2}
               dot={{ r: 4, fill: "#0f172a" }}
               activeDot={{ r: 6 }}
+              // React Compiler 환경에서 진입 애니메이션이 완료되지 않아
+              // 선 경로가 그려지지 않는 현상이 있어 비활성화한다.
+              isAnimationActive={false}
             />
           </LineChart>
         </ResponsiveContainer>
