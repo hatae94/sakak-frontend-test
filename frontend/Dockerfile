@@ -33,7 +33,8 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 # standalone 산출물에는 실행에 필요한 최소 node_modules가 포함된다.
 COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/static ./frontend/.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/frontend/public ./frontend/public
+# public/ 은 서빙할 정적 파일이 없어 존재하지 않는다. 생기면 이 줄을 되살린다.
+# COPY --from=builder --chown=nextjs:nodejs /app/frontend/public ./frontend/public
 
 USER nextjs
 EXPOSE 3000
