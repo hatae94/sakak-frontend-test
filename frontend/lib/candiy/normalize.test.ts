@@ -94,6 +94,44 @@ describe("evaluateMetric", () => {
   });
 });
 
+describe("간기능 판정 경계 (공단 기준)", () => {
+  // AST 정상A 40 이하 / 정상B 41~50 / 질환의심 51 이상
+  it.each([
+    ["40", "normal"],
+    ["41", "caution"],
+    ["50", "caution"],
+    ["51", "danger"],
+  ])("AST %s -> %s", (value, expected) => {
+    expect(evaluateMetric(metric("AST"), value)).toBe(expected);
+  });
+
+  // ALT 정상A 35 이하 / 정상B 36~45 / 질환의심 46 이상
+  it.each([
+    ["35", "normal"],
+    ["36", "caution"],
+    ["45", "caution"],
+    ["46", "danger"],
+  ])("ALT %s -> %s", (value, expected) => {
+    expect(evaluateMetric(metric("ALT"), value)).toBe(expected);
+  });
+
+  it("AST와 ALT는 서로 다른 기준을 쓴다", () => {
+    expect(evaluateMetric(metric("AST"), "38")).toBe("normal");
+    expect(evaluateMetric(metric("ALT"), "38")).toBe("caution");
+  });
+
+  it("판정과 함께 표시되는 공단 참고치가 서로 모순되지 않는다", () => {
+    // 한 카드 안에 "정상" 배지와 "35 이하" 참고치가 나란히 놓이면 안 된다.
+    const overview = { checkupDate: "2024-03-01", ALT: "38" } as unknown as CheckupOverview;
+    const alt = evaluateOverview(overview, [
+      { refType: "정상(A)", ALT: "35 이하" },
+    ]).find((m) => m.key === "ALT");
+
+    expect(alt?.reference).toBe("35 이하");
+    expect(alt?.status).not.toBe("normal");
+  });
+});
+
 describe("normalizeCheckupData", () => {
   it("caseType이 Number로 와도 문자열로 통일한다 (문서-실제 불일치)", () => {
     const raw = {

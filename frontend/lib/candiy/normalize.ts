@@ -40,7 +40,12 @@ interface MetricDef {
 
 /**
  * 국가건강검진 일반 판정 기준을 따른다.
- * 성별로 기준이 갈리는 항목(혈색소, 감마지티피, 허리둘레)은 응답에 성별이 없어
+ *
+ * 이 값들은 응답의 referenceList(공단 참고치)와 함께 한 카드에 표시되므로,
+ * 둘이 어긋나면 "정상" 배지 옆에 더 엄격한 참고치가 나란히 놓이는 모순이 생긴다.
+ * 기준을 바꿀 때는 normalize.test.ts의 경계값 테스트를 함께 확인한다.
+ *
+ * 성별로 기준이 갈리는 항목(혈색소, 감마지티피)은 응답에 성별이 없어
  * 넓은 쪽 범위를 적용하고 note로 한계를 밝힌다.
  */
 export const METRIC_DEFS: MetricDef[] = [
@@ -50,8 +55,9 @@ export const METRIC_DEFS: MetricDef[] = [
   { key: "HDLCholesterol", label: "HDL 콜레스테롤", unit: "mg/dL", normal: [60, null], caution: [40, null] },
   { key: "LDLCholesterol", label: "LDL 콜레스테롤", unit: "mg/dL", normal: [null, 129], caution: [null, 159] },
   { key: "triglyceride", label: "중성지방", unit: "mg/dL", normal: [null, 149], caution: [null, 199] },
+  // 간기능 수치는 AST와 ALT의 기준이 서로 다르다. 같은 값으로 묶지 않는다.
   { key: "AST", label: "AST(SGOT)", unit: "U/L", normal: [null, 40], caution: [null, 50] },
-  { key: "ALT", label: "ALT(SGPT)", unit: "U/L", normal: [null, 40], caution: [null, 50] },
+  { key: "ALT", label: "ALT(SGPT)", unit: "U/L", normal: [null, 35], caution: [null, 45] },
   { key: "yGPT", label: "감마지티피", unit: "U/L", normal: [null, 63], caution: [null, 77], note: "성별 기준 상이 (남 11~63, 여 8~35)" },
   { key: "hemoglobin", label: "혈색소", unit: "g/dL", normal: [12, 16.5], caution: [10, 18], note: "성별 기준 상이 (남 13~16.5, 여 12~15.5)" },
   { key: "serumCreatinine", label: "혈청크레아티닌", unit: "mg/dL", normal: [null, 1.5], caution: [null, 1.7] },
