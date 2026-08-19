@@ -56,8 +56,28 @@ function getServerSnapshot(): string | null {
   return null;
 }
 
+/**
+ * 하이드레이션 완료 여부.
+ *
+ * 서버 렌더 시점에는 sessionStorage를 읽을 수 없어 로그인한 사용자도 잠시
+ * 비로그인으로 보인다. 그 순간을 "비로그인"으로 단정하면 로그인한 사용자가
+ * 로그인 화면으로 튕기므로, 확정 전까지는 loading 으로 구분한다.
+ */
+const neverChanges = () => () => {};
+
+function useIsHydrated(): boolean {
+  return useSyncExternalStore(
+    neverChanges,
+    () => true,
+    () => false,
+  );
+}
+
+export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
+
 interface SessionContextValue {
   userName: string | null;
+  status: SessionStatus;
   login: (userName: string) => void;
   logout: () => void;
 }
@@ -65,12 +85,24 @@ interface SessionContextValue {
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const userName = useSyncExternalStore(subscribe, read, getServerSnapshot);
+  const stored = useSyncExternalStore(subscribe, read, getServerSnapshot);
+  const isHydrated = useIsHydrated();
+
+  // 확정 전에는 이름을 노출하지 않아 화면이 깜빡이지 않게 한다.
+  const userName = isHydrated ? stored : null;
+  const status: SessionStatus = !isHydrated
+    ? "loading"
+    : stored
+      ? "authenticated"
+      : "unauthenticated";
 
   const login = useCallback((name: string) => write(name), []);
   const logout = useCallback(() => write(null), []);
 
-  const value = useMemo(() => ({ userName, login, logout }), [userName, login, logout]);
+  const value = useMemo(
+    () => ({ userName, status, login, logout }),
+    [userName, status, login, logout],
+  );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

@@ -1,21 +1,28 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Card, ErrorNotice } from "@/components/ui/status";
 import { useSession } from "@/lib/store/session-context";
 
 /**
- * Mock 로그인.
- * 실제 인증 서버 없이 이름만 받아 맞춤 문구에 사용한다.
- * 건강검진 조회 자체는 CANDiY 간편인증으로 별도 수행된다.
+ * Mock 로그인 — 서비스 진입점.
+ *
+ * 실제 인증 서버 없이 이름만 받아 맞춤 문구에 사용한다. 건강검진 기능은
+ * `app/(protected)` 게이트가 막고 있어 이 화면을 거쳐야 접근할 수 있다.
+ * 건강검진 조회 본인확인은 CANDiY 간편인증으로 별도 수행된다.
  */
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useSession();
+  const { status, login } = useSession();
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  // 이미 로그인한 사용자가 주소로 직접 들어온 경우 되돌려 보낸다.
+  useEffect(() => {
+    if (status === "authenticated") router.replace("/");
+  }, [status, router]);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -36,8 +43,8 @@ export default function LoginPage() {
           <div>
             <h1 className="text-lg font-semibold tracking-tight">로그인</h1>
             <p className="mt-1 text-sm text-slate-500">
-              데모용 로그인입니다. 입력한 이름은 화면 안내 문구에만 사용되며 서버로
-              전송되지 않습니다.
+              건강검진 조회를 이용하려면 로그인이 필요합니다. 데모용이라 이름만 확인하며,
+              입력한 이름은 화면 안내 문구에만 사용되고 서버로 전송되지 않습니다.
             </p>
           </div>
 

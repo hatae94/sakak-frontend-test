@@ -14,8 +14,11 @@ const NAV = [
 
 export function AppHeader() {
   const pathname = usePathname();
-  const { userName, logout } = useSession();
+  const { userName, status, logout } = useSession();
   const { data, clear } = useCheckup();
+
+  // 비로그인 상태에서는 눌러도 로그인으로 되돌아오므로 메뉴를 감춘다.
+  const isAuthenticated = status === "authenticated";
 
   return (
     <header className="border-b border-slate-200 bg-white">
@@ -24,25 +27,27 @@ export function AppHeader() {
           건강검진 대시보드
         </Link>
 
-        <nav className="flex items-center gap-1" aria-label="주요 메뉴">
-          {NAV.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
-                  active
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {isAuthenticated && (
+          <nav className="flex items-center gap-1" aria-label="주요 메뉴">
+            {NAV.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
+                    active
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
 
         <div className="ml-auto flex items-center gap-3 text-sm">
           {data && (
