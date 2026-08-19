@@ -1,26 +1,21 @@
 @import "tailwindcss";
 
+/*
+ * 이 앱은 밝은 테마 하나로 설계되어 있다. 배경은 slate-50, 카드는 흰색이고
+ * dark: 변형을 사용하는 곳이 없다.
+ *
+ * 스캐폴딩이 넣어둔 prefers-color-scheme 변수와 body 배경 지정을 그대로 두면,
+ * OS가 다크 모드일 때 body 배경만 검게 바뀌고 카드 안 글자는 밝은 색으로 남아
+ * 흰 카드 위에서 읽을 수 없게 된다. 해당 규칙이 레이어 밖에 있어 Tailwind
+ * 유틸리티(bg-slate-50)보다 우선하기 때문이다.
+ *
+ * 색상은 Tailwind 클래스로만 지정하고, select 같은 네이티브 컨트롤도 밝게 고정한다.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard,
+    "Malgun Gothic", system-ui, sans-serif;
 }
