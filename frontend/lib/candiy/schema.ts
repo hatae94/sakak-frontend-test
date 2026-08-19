@@ -22,9 +22,10 @@ export const checkupAuthSchema = z.object({
   birthdate: z
     .string()
     .regex(/^\d{8}$/, "생년월일은 YYYYMMDD 8자리로 입력하세요."),
+  // 010-1234-5678(11자리) 및 구형 011/016~019(10자리)를 모두 허용한다.
   phoneNo: z
     .string()
-    .regex(/^01\d{7,8}$/, "휴대폰 번호는 하이픈 없이 숫자만 입력하세요."),
+    .regex(/^01[016789]\d{7,8}$/, "휴대폰 번호는 하이픈 없이 숫자만 입력하세요."),
   telecom: z.enum(telecoms),
   startDate: z
     .string()
